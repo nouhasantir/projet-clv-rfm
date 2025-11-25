@@ -127,3 +127,15 @@ def get_retention_matrix(cohort_counts: pd.DataFrame):
     retention = retention.set_index(acq_col)
 
     return retention
+def load_rfm():
+    """
+    Charge le fichier rfm_segments.csv contenant la segmentation RFM.
+
+    Colonnes typiques :
+    - CustomerID
+    - Recency, Frequency, Monetary
+    - RFM_Score
+    - Segment (Champions, À risque, Potentiel, etc.)
+    - Revenue (facultatif)
+    """
+    return pd.read_csv(DATA_DIR / "rfm_segments.csv")
