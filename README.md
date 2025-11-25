@@ -13,18 +13,18 @@ Il contient :
 ### Cette étape du projet consiste à construire les cohortes d’acquisition, mesurer la rétention client dans le temps et analyser la dynamique de chiffre d’affaires par âge de cohorte. Le but est de comprendre le comportement post-acquisition des clients et de fournir les matrices nécessaires au calcul de la CLV empirique et à l’application Streamlit.
 Le notebook utilisé est : 03_cohort_analysis.ipynb.
 Il contient :
-•	Préparation temporelle des données : création de InvoiceMonth, AcqMonth (mois d’acquisition) et CohortAge (M+0, M+1, ...).
-•	Construction des matrices de cohortes :
-o	cohort_counts : nombre de clients actifs par cohorte et par âge,
-o	cohort_revenue : chiffre d’affaires généré par cohorte et par âge.
-•	Calcul des taux de rétention : ratio entre le nombre de clients actifs à M+t et l’effectif initial de la cohorte (M+0).
-•	Visualisations principales :
-o	heatmap de rétention par cohorte,
-o	heatmap du revenu par âge de cohorte,
-o	densité du chiffre d’affaires moyen selon l’âge.
-•	Résultats clés observés :
-o	forte baisse de rétention entre M+0 et M+1,
-o	stabilisation d’un noyau fidèle à partir de M+3,
+-Préparation temporelle des données : création de InvoiceMonth, AcqMonth (mois d’acquisition) et CohortAge (M+0, M+1, ...).
+-	Construction des matrices de cohortes :
+-cohort_counts : nombre de clients actifs par cohorte et par âge,
+-cohort_revenue : chiffre d’affaires généré par cohorte et par âge.
+-Calcul des taux de rétention : ratio entre le nombre de clients actifs à M+t et l’effectif initial de la cohorte (M+0).
+-Visualisations principales :
+-heatmap de rétention par cohorte,
+-heatmap du revenu par âge de cohorte,
+-densité du chiffre d’affaires moyen selon l’âge.
+-Résultats clés observés :
+-forte baisse de rétention entre M+0 et M+1,
+-stabilisation d’un noyau fidèle à partir de M+3,
 o	concentration de la valeur client principalement sur les trois premiers mois,
 o	cohortes anciennes (2009–2010) plus volumineuses et plus rentables.
 •	Exports produits :
