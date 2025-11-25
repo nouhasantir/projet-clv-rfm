@@ -33,6 +33,41 @@ Le notebook utilisé est : 02_data_exploration.ipynb.
   - `cohort_counts.csv`,
   - `cohort_revenue.csv`,
   - figures pour la présentation Streamlit dans `docs/`.
+ 
+# clv empirical
+
+### Cette partie du projet calcule la Customer Lifetime Value (CLV) de manière empirique, à la fois au niveau individuel (client) et au niveau des cohortes. Elle produit également les visualisations nécessaires pour analyser l’évolution de la valeur client dans le temps.
+
+#### Contenu du travail
+
+- **Préparation des données**
+  - Nettoyage des transactions
+  - Calcul du montant de chaque ligne : `Amount = Quantity × UnitPrice`
+
+- **CLV par client**
+  - Agrégation du total dépensé par client
+  - Export : `clv_customer.csv`
+
+- **CLV par cohorte**
+  - Détermination du mois d’acquisition (`AcqMonth`)
+  - Calcul de l’âge de cohorte (`CohortAge`, en mois)
+  - Calcul de la CLV moyenne par cohorte
+  - Export : `clv_cohort.csv`
+
+- **Visualisations**
+  - Heatmap CLV par cohorte (`clv_cohort_heatmap.png`)
+  - Revenu cumulatif par cohorte (`clv_cumulative_trend.png`)
+  - Distributions de la CLV (échelle linéaire et logarithmique)
+  - Comptage des clients avec CLV nulle
+
+### Exports générés (dossier `output_clv/`)
+- `clv_customer.csv` — CLV par client  
+- `clv_cohort.csv` — CLV par cohorte  
+- Visualisations :
+  - `clv_cohort_heatmap.png`
+  - `clv_cumulative_trend.png`
+  - `clv_customer_distribution_linear.png`
+  - `clv_customer_distribution_log.png`
 
 
 # rfm clv formulee
