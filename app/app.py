@@ -1,17 +1,19 @@
 # ===============================================
 # app/app.py
 # Application Streamlit principale :
-# - Affiche les KPIs globaux (Overview)
-# - Affiche la heatmap de rétention (Cohortes)
+# - Overview (KPIs)
+# - Exploration globale (cohortes)
+# - Heatmap de rétention (Cohortes)
+# - Segments RFM
+# - Scénarios (placeholder)
 # ===============================================
 
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
-from utils import load_all, compute_kpis_global, get_retention_matrix
 from utils import load_all, compute_kpis_global, get_retention_matrix, load_rfm
-
 
 # ---------------------------------------------------
 # CONFIGURATION DE LA PAGE
@@ -23,9 +25,69 @@ st.set_page_config(
 
 st.title("📈 Application Cohortes & CLV (Version intégration)")
 
+# ---------------------------------------------------
+# CHARGEMENT DES DONNÉES
+# ---------------------------------------------------
+@st.cache_data
+def get_data():
+    cohort_counts, cohort_revenue = load_all()
+    return cohort_counts, cohort_revenue
+
+@st.cache_data
+def get_rfm_data():
+    try:
+        rfm = load_rfm()
+        return rfm
+    except FileNotFoundError:
+        return None
+
+cohort_counts, cohort_revenue = get_data()
+
+# ---------------------------------------------------
+# SIDEBAR : navigation
+# ---------------------------------------------------
+page = st.sidebar.selectbox(
+    "Navigation",
+    [
+        "Overview (KPIs)",
+        "Exploration (global)",
+        "Cohortes (heatmap)",
+        "Segments RFM",
+        "Scénarios (placeholder)"
+    ]
+)
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Filtres futurs :**")
+st.sidebar.caption("Période, pays, type client, retours... (à intégrer plus tard)")
+
+# ---------------------------------------------------
 # PAGE 1 : OVERVIEW (KPIs)
+# ---------------------------------------------------
 if page == "Overview (KPIs)":
-    ...
+    st.subheader("Vue globale (KPIs)")
+
+    # Calcul des KPIs globaux
+    kpis = compute_kpis_global(cohort_counts, cohort_revenue)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Clients acquis", f"{kpis['clients_acquis']:.0f}")
+    col2.metric("CA total", f"{kpis['ca_total']:.2f}")
+    col3.metric("CLV moyenne (approx.)", f"{kpis['clv_moyenne']:.2f}")
+
+    st.markdown("---")
+    st.markdown(
+        """
+        Ces indicateurs sont calculés à partir des matrices agrégées :
+
+        - **Clients acquis** : somme des effectifs à l'âge 0 dans `cohort_counts`
+        - **CA total** : somme de toutes les valeurs de `cohort_revenue`
+        - **CLV moyenne approximative** : CA total / nombre de clients acquis
+
+        Ils servent de base pour paramétrer les autres vues (cohortes, segments, scénarios).
+        """
+    )
+
 # ---------------------------------------------------
 # PAGE 2 : EXPLORATION GLOBALE (inspirée du notebook d'explo)
 # ---------------------------------------------------
@@ -35,8 +97,9 @@ elif page == "Exploration (global)":
     st.markdown(
         """
         Cette page reprend une partie des analyses du notebook d'exploration :
-        distribution des tailles de cohortes, répartition du CA, et dynamique
-        globale de la valeur par âge.
+        - distribution des tailles de cohortes,
+        - répartition du CA par cohorte,
+        - dynamique globale de la valeur par âge de cohorte.
         """
     )
 
@@ -100,62 +163,8 @@ elif page == "Exploration (global)":
         "dans le notebook de cohortes : il montre où se concentre la valeur dans le temps."
     )
 
-
-
 # ---------------------------------------------------
-# CHARGEMENT DES DONNÉES
-# ---------------------------------------------------
-@st.cache_data
-def get_data():
-    cohort_counts, cohort_revenue = load_all()
-    return cohort_counts, cohort_revenue
-
-cohort_counts, cohort_revenue = get_data()
-
-
-# ---------------------------------------------------
-# SIDEBAR : navigation simple
-# ---------------------------------------------------
-page = st.sidebar.selectbox(
-    "Navigation",
-    ["Overview (KPIs)", "Cohortes (heatmap)", "Segments (placeholder)", "Scénarios (placeholder)"]
-)
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("**Filtres futurs :**")
-st.sidebar.caption("Période, pays, type client, retours... (à intégrer plus tard)")
-
-
-# ---------------------------------------------------
-# PAGE 1 : OVERVIEW (KPIs)
-# ---------------------------------------------------
-if page == "Overview (KPIs)":
-    st.subheader("Vue globale (KPIs)")
-
-    # Calcul des KPIs globaux
-    kpis = compute_kpis_global(cohort_counts, cohort_revenue)
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Clients acquis", f"{kpis['clients_acquis']:.0f}")
-    col2.metric("CA total", f"{kpis['ca_total']:.2f}")
-    col3.metric("CLV moyenne (approx.)", f"{kpis['clv_moyenne']:.2f}")
-
-    st.markdown("---")
-    st.markdown(
-        """
-        Ces indicateurs sont calculés à partir des matrices agrégées :
-
-        - **Clients acquis** : somme des effectifs à l'âge 0 dans `cohort_counts`
-        - **CA total** : somme de toutes les valeurs de `cohort_revenue`
-        - **CLV moyenne approximative** : CA total / nombre de clients acquis
-
-        Ils servent de base pour paramétrer les autres vues (cohortes, segments, scénarios).
-        """
-    )
-
-
-# ---------------------------------------------------
-# PAGE 2 : COHORTES (HEATMAP)
+# PAGE 3 : COHORTES (HEATMAP)
 # ---------------------------------------------------
 elif page == "Cohortes (heatmap)":
     st.subheader("Analyse des cohortes d’acquisition")
@@ -211,34 +220,10 @@ elif page == "Cohortes (heatmap)":
         """
     )
 
-
 # ---------------------------------------------------
-# PAGE 3 : SEGMENTS (PLACEHOLDER)
+# PAGE 4 : SEGMENTS RFM
 # ---------------------------------------------------
-elif page == "Segments (placeholder)":
-    st.subheader("Segments RFM (à intégrer)")
-
-    st.info(
-        """
-        Cette page est un **placeholder** pour l'intégration future des segments RFM.
-        
-        Elle pourra afficher :
-        - Une table des segments RFM (Champions, À risque, etc.)
-        - Les volumes, CA, marge, panier moyen par segment
-        - Les recommandations d’activation CRM (où investir / où réduire)
-
-        Pour le moment, les données RFM ne sont pas encore intégrées dans ce projet.
-        """
-    )
-
-
-# ---------------------------------------------------
-# PAGE 4 : SCÉNARIOS (PLACEHOLDER)
-# ---------------------------------------------------
-# ---------------------------------------------------
-# PAGE : SEGMENTS RFM
-# ---------------------------------------------------
-elif page == "Segments (placeholder)":
+elif page == "Segments RFM":
     st.subheader("Segments RFM")
 
     rfm = get_rfm_data()
@@ -379,14 +364,22 @@ elif page == "Segments (placeholder)":
                     - Actions possibles : campagnes dédiées, cross-sell, up-sell.
                     """
                 )
-
         else:
             st.warning("La colonne 'Segment' est absente du fichier rfm_segments.csv.")
 
-@st.cache_data
-def get_rfm_data():
-    try:
-        rfm = load_rfm()
-        return rfm
-    except FileNotFoundError:
-        return None
+# ---------------------------------------------------
+# PAGE 5 : SCÉNARIOS (PLACEHOLDER)
+# ---------------------------------------------------
+elif page == "Scénarios (placeholder)":
+    st.subheader("Scénarios (à venir)")
+
+    st.info(
+        """
+        Cette page sera dédiée aux simulations de scénarios :
+        - variation de la rétention (r)
+        - variation de la marge
+        - impact sur la CLV et le CA
+
+        Elle pourra comparer un baseline vs un scénario (Δ CLV, Δ CA, Δ rétention).
+        """
+    )
