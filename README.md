@@ -1,3 +1,22 @@
+## Data Preparation
+
+### Cette partie prépare le dataset Online Retail II afin de le rendre fiable et exploitable pour toutes les analyses du projet (cohortes, RFM, CLV et simulations Streamlit). Le dataset brut contenant des anomalies (valeurs manquantes, retours, prix négatifs, doublons), un pipeline complet de nettoyage a été appliqué.
+
+Les principales étapes sont :
+- Harmonisation des noms de colonnes.
+- Conversion des types (dates, numériques).
+- Suppression des enregistrements incomplets (ex. dates manquantes).
+- Traitement des quantités négatives et des retours.
+- Calcul de la variable `Amount`.
+- Génération de plusieurs datasets nettoyés :
+  - `transactions_including_returns`
+  - `transactions_excluding_returns`
+  - `transactions_customers`
+
+Ce nettoyage garantit la cohérence des analyses suivantes (RFM, rétention, CLV) et constitue une base fiable pour l’application Streamlit et les décisions marketing.
+
+
+
 # Data Exploration 
 
 ### Cette partie du projet consiste à analyser et explorer le dataset Online Retail II afin de comprendre sa structure, vérifier la qualité des données et produire les premiers indicateurs utiles pour la suite (modélisation, segmentation, application Streamlit).
