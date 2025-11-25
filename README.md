@@ -9,7 +9,7 @@ Il contient :
 - Analyse descriptive (dimensions, types, valeurs manquantes, incohérences).
 - Visualisations principales : évolution des ventes, distributions prix/quantités, analyse par pays.
 
-## rfm clv formulee
+# rfm clv formulee
 
 Cette étape consiste à construire la table RFM complète, segmenter les clients selon leur comportement d’achat et estimer la Customer Lifetime Value (CLV) via une formule fermée. Le notebook utilise les données nettoyées fournies par le Membre 2.
 
