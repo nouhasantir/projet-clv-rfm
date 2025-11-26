@@ -171,4 +171,25 @@ Results produced: overall CLV and CLV by RFM segment.
 
 Final export: file clean_data/customers_rfm.xlsx containing RFM metrics, scores, segments, ARPU, and CLV for use in the Streamlit app.
 
-
+ Objectif
+ Le notebook 06 permet d’intégrer les résultats des notebooks 01 à 05 et de générer l’application
+ Streamlit utilisée pour l’analyse marketing. Il regroupe le chargement des données, l’application des
+ filtres globaux, l’affichage des tableaux et des visualisations, ainsi que les scénarios business.
+ Entrées nécessaires
+ Les fichiers suivants doivent être placés dans un dossier local nommé data/ :- online_retail_II.xlsx- cohort_revenue.csv- cohort_counts.csv
+ D’autres fichiers comme rfm_segments.csv ou les fichiers CLV peuvent être ajoutés si disponibles.
+ Fonctionnement du notebook
+ 1. Chargement des données
+ Le notebook lit les fichiers du dossier data/ en utilisant des chemins relatifs pour assurer la
+ compatibilité entre les membres du groupe.
+ 2. Mise en place des filtres
+ L’application Streamlit intègre des filtres sur la période, le pays, le type de client, le seuil de commande
+ et la gestion des retours.
+ 3. Construction de l'application
+ L'application comporte quatre pages :- KPIs : affichage des indicateurs principaux.- Cohortes : dynamique de rétention et revenu par âge de cohorte.- Segments RFM : consultation de la segmentation RFM.- Scénarios : simulation d’impacts business et export des listes client.
+ Lancement de l’application
+Depuis le dossier du projet :
+ python -m streamlit run 06_streamlit_app.py
+ Rôle du notebook
+ Ce notebook rassemble les données, prépare les visualisations, assure la cohérence globale de
+ l’application et constitue la dernière étape du projet
